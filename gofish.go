@@ -99,13 +99,13 @@ func (game *Game) play() {
 	fmt.Printf("\n start-of-play ------------------\n\n")
 
 	// game logic
-	for game.playerTurn() == true {
-		game.playerTurn()
+	if game.playerTurn() {
+
+	}
+	if game.opponentTurn() {
+
 	}
 
-	if game.opponentTurn() {
-		fmt.Printf("opponent turn \n")
-	}
 }
 
 func (game *Game) playerTurn() bool {
@@ -134,18 +134,17 @@ func (game *Game) playerTurn() bool {
 					} else {
 						temp = append(temp, game.opponentCards[j])
 					}
-
-					// if removeCard <= 1 {
-					// 	if bait != int64(game.opponentCards[j].value) {
-					// 		temp = append(temp, game.opponentCards[j])
-					// 	} else {
-
-					// 	}
-					// }
 				}
 				game.opponentCards = temp
 				displayCards(game.opponentCards)
-				return true
+
+				// continue playing if there are still cards in deck
+				if len(game.playerCards)+len(game.opponentCards) != 52 {
+					game.play()
+				} else {
+					return false
+				}
+
 			}
 		}
 
@@ -154,6 +153,19 @@ func (game *Game) playerTurn() bool {
 		game.playerCards = append(game.playerCards, card)
 		displayCards(game.playerCards)
 		displayCards(game.opponentCards)
+		return false
+	}
+	return false
+}
+
+func (game *Game) opponentTurn() bool {
+	// if has multi cards, ask for those
+	// otherwise randomly choose 1 in hand to ask for
+	// if success, cont. if fail, choose card from deck and end turn
+	fmt.Printf("opponent's turn \n")
+	if len(game.playerCards)+len(game.opponentCards) != 52 {
+		game.play()
+	} else {
 		return false
 	}
 	return false
@@ -171,13 +183,6 @@ func enterString() string {
 	input = strings.TrimSuffix(input, "\r")
 	input = strings.TrimSuffix(input, "\n")
 	return input
-}
-
-func (game *Game) opponentTurn() bool {
-	// if has multi cards, ask for those
-	// otherwise randomly choose 1 in hand to ask for
-	// if success, cont. if fail, choose card from deck and end turn
-	return false
 }
 
 func displayCards(cards []Card) {
