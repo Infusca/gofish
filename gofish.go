@@ -11,6 +11,8 @@ import (
 	"strings"
 )
 
+fmt.Printf("on master branch")
+
 type Card struct {
 	value int
 	suit  int // 0-spade, 1-heart, 2-diamond, 3-club
