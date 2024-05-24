@@ -95,18 +95,16 @@ func (game *Game) dealStartingCards() {
 }
 
 func (game *Game) play() {
-	defer fmt.Printf("\n------------------\n\n")
-	fmt.Printf("\n------------------\n\n")
-
-	game.dealStartingCards()
+	defer fmt.Printf("\n end-of-play ------------------\n\n")
+	fmt.Printf("\n start-of-play ------------------\n\n")
 
 	// game logic
-	if game.playerTurn() {
-
+	for game.playerTurn() == true {
+		game.playerTurn()
 	}
 
 	if game.opponentTurn() {
-
+		fmt.Printf("opponent turn \n")
 	}
 }
 
@@ -116,25 +114,34 @@ func (game *Game) playerTurn() bool {
 		gofish := enterString()
 		bait, _ := strconv.ParseInt(gofish, 10, 64)
 		temp := []Card{}
+		removeCard := 0
 
 		// check opponent cards, if match, give to player, remove from opponent, return true
 		for i := 0; i < len(game.opponentCards); i++ {
 			fish := int64(game.opponentCards[i].value)
-			fmt.Print(bait, fish, ". \n")
+
 			if bait == fish {
 				// add to card to player hand
 				fmt.Printf("You caught a fish! \n")
 				game.playerCards = append(game.playerCards, game.opponentCards[i])
 				displayCards(game.playerCards)
-				fmt.Printf("\n")
 
 				// remove from opponent hand
 				for j := 0; j < len(game.opponentCards); j++ {
-					if bait != int64(game.opponentCards[j].value) {
-						temp = append(temp, game.opponentCards[j])
+					card := game.opponentCards[j].value
+					if int64(card) == bait && removeCard == 0 {
+						removeCard += 1
 					} else {
-
+						temp = append(temp, game.opponentCards[j])
 					}
+
+					// if removeCard <= 1 {
+					// 	if bait != int64(game.opponentCards[j].value) {
+					// 		temp = append(temp, game.opponentCards[j])
+					// 	} else {
+
+					// 	}
+					// }
 				}
 				game.opponentCards = temp
 				displayCards(game.opponentCards)
@@ -149,7 +156,7 @@ func (game *Game) playerTurn() bool {
 		displayCards(game.opponentCards)
 		return false
 	}
-	return true
+	return false
 }
 
 func enterString() string {
@@ -170,7 +177,7 @@ func (game *Game) opponentTurn() bool {
 	// if has multi cards, ask for those
 	// otherwise randomly choose 1 in hand to ask for
 	// if success, cont. if fail, choose card from deck and end turn
-	return true
+	return false
 }
 
 func displayCards(cards []Card) {
@@ -187,5 +194,6 @@ func displayCards(cards []Card) {
 
 func main() {
 	game := Game{}
+	game.dealStartingCards()
 	game.play()
 }
