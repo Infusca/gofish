@@ -80,6 +80,8 @@ type Game struct {
 	deck          Deck
 	playerCards   []Card
 	opponentCards []Card
+	playerBooks   []Card
+	opponentBooks []Card
 }
 
 func (game *Game) dealStartingCards() {
@@ -106,6 +108,66 @@ func (game *Game) play() {
 
 	}
 
+}
+
+// func (game *Game) searchCards(bait int) int {
+// 	// bait, _ = strconv.ParseInt(bait, 10, 64)
+// 	temp := []Card{}
+// 	ask := bait
+// 	removeCard := 0
+// 	for i := 0; i < len(game.playerCards); i++ {
+// 		// fish := int64(game.playerCards[i].value)
+
+// 		// if bait == fish {
+// 		// 	// add to card to opponent hand
+// 		// 	game.opponentCards = append(game.opponentCards, game.playerCards[i])
+// 		// 	// displayCards(game.playerCards)
+
+// 		// 	// remove from player hand
+// 		// 	for j := 0; j < len(game.playerCards); j++ {
+// 		// 		card := game.playerCards[j].value
+// 		// 		if int64(card) == bait && removeCard == 0 {
+// 		// 			removeCard += 1
+// 		// 		} else {
+// 		// 			temp = append(temp, game.playerCards[j])
+// 		// 		}
+// 		// 	}
+// 		// 	game.playerCards = temp
+
+// 		// 	// continue playing if there are still cards in deck
+// 		// 	if len(game.playerCards)+len(game.opponentCards) != 52 {
+// 		// 		game.play()
+// 		// 	} else {
+// 		// 		// return false
+// 		// 	}
+
+// 		// }
+// 	}
+// 	fmt.Print(temp, ask, removeCard)
+// 	return 5
+// }
+
+// func (game *Game) removeCardFromDeck(cards) {
+// 	temp := []Card{}
+// 	removeCard := 0
+
+// 	for j := 0; j < len(cards); j++ {
+// 		card := cards[j].value
+// 		if int64(card) == bait && removeCard == 0 {
+// 			removeCard += 1
+// 		} else {
+// 			temp = append(temp, game.opponentCards[j])
+// 		}
+// 	}
+// 	game.opponentCards = temp
+// }
+
+func (game *Game) checkForBook(hand []Card) {
+	count := 0
+	for i := 0; i < len(game.playerCards); i++ {
+		// card := game.playerCards[i]
+		count++
+	}
 }
 
 func (game *Game) playerTurn() bool {
@@ -138,6 +200,9 @@ func (game *Game) playerTurn() bool {
 				game.opponentCards = temp
 				displayCards(game.opponentCards)
 
+				// check hand for book, remove from hand, add to player books
+				game.checkForBook(game.playerCards)
+
 				// continue playing if there are still cards in deck
 				if len(game.playerCards)+len(game.opponentCards) != 52 {
 					game.play()
@@ -159,15 +224,73 @@ func (game *Game) playerTurn() bool {
 }
 
 func (game *Game) opponentTurn() bool {
-	// if has multi cards, ask for those
-	// otherwise randomly choose 1 in hand to ask for
-	// if success, cont. if fail, choose card from deck and end turn
+	// has4 := []Card{}
+	// has3 := []Card{}
+	// has2 := []Card{}
+	// has1 := []Card{}
+	// ask := []Card{}
+
+	// determine how many of each card value opponent has
+	// for i := 0; i < len(game.opponentCards); i++ {
+	// 	fmt.Print("Opponent's turn \n --------------- \n")
+	// 	for j := 0; j < len(has1); j++ {
+	// 		if has1[j].value != game.opponentCards[i].value {
+	// 			has1 = append(has1, game.opponentCards[i])
+	// 		} else {
+	// 			for k := 0; k < len(has2); k++ {
+	// 				if has2[k].value != game.opponentCards[i].value {
+	// 					has2 = append(has2, game.opponentCards[i])
+	// 				} else {
+	// 					for l := 0; l < len(has3); l++ {
+	// 						if has3[l].value != game.opponentCards[i].value {
+	// 							has3 = append(has3, game.opponentCards[i])
+	// 						} else {
+	// 							fmt.Printf("Book collected!")
+	// 							has4 = append(has4, game.opponentCards[i])
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// ask randomly for value that has most of
+	// if len(has3) > 0 {
+	// 	rand.Shuffle(len(has3), func(i, j int) { has3[i], has3[j] = has3[j], has3[i] })
+	// 	// ask := has3[0].value
+	// } else if len(has2) > 0 {
+	// 	rand.Shuffle(len(has2), func(i, j int) { has2[i], has2[j] = has2[j], has2[i] })
+	// 	// ask := has2[0].value
+	// } else {
+	// 	rand.Shuffle(len(has1), func(i, j int) { has1[i], has1[j] = has1[j], has1[i] })
+	// 	// ask := has1[0].value
+	// }
+
+	// fmt.Print(has3, "\n", has2, "\n", has1, "\n")
+
+	// rand.Shuffle(len(game.opponentCards), func(i, j int) {
+	// 	game.opponentCards[i], game.opponentCards[j] = game.opponentCards[j], game.opponentCards[i]
+	// })
+	// ask := game.opponentCards[0].value
+
+	// fmt.Print("Opponent is asking for ", ask, "\n")
+
+	// game.searchCards(ask)
+
+	// hasBook(game.opponentCards)
+
 	fmt.Printf("opponent's turn \n")
 	if len(game.playerCards)+len(game.opponentCards) != 52 {
 		game.play()
 	} else {
 		return false
 	}
+	return false
+}
+
+// check if player has book, remove book from hand, add to books
+func hasBook(cards []Card) bool {
 	return false
 }
 
