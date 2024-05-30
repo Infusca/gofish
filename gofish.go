@@ -3,15 +3,16 @@ package main
 import (
 	"bufio"
 	"fmt"
-	// "math"
 	"math/rand"
 	"os"
-	// "reflect"
-	// "sort"
 	"strconv"
 	"strings"
 	"time"
 )
+
+// To do:
+// fix logic for opponent card selection
+// what happens if cards in hand == 0 (player & opponent)
 
 type Card struct {
 	value int
@@ -103,33 +104,26 @@ func (game *Game) play() {
 	fmt.Printf("\n start-of-play ------------------\n\n")
 
 	if game.playerTurn() {
-		// check hand for book, remove from hand, add to player books
-		// game.checkForBook(game.playerCards)
 	}
 
 	if game.opponentTurn() {
-		//game.checkForBook(game.opponentCards)
 	}
 
 	fmt.Print(game.isEndGame(game.playerBooks, game.opponentBooks))
 }
-
-// func removeCards(cards []Card) {
-
-// }
 
 func (game *Game) isEndGame(playerHand []Card, opponentHand []Card) string {
 	var winner string
 	if len(playerHand)+len(opponentHand) == 52 {
 		if len(playerHand) > len(opponentHand) {
 			winner = "You win!"
-			fmt.Print("You win!")
+			// fmt.Print("You win!")
 		} else if len(opponentHand) > len(playerHand) {
 			winner = "Opponent wins!"
-			fmt.Print("Opponent wins!")
+			// fmt.Print("Opponent wins!")
 		} else if len(playerHand) == len(opponentHand) {
 			winner = "You tied!"
-			fmt.Print("Tie!")
+			// fmt.Print("Tie!")
 		}
 	}
 	return winner
@@ -192,6 +186,7 @@ func (game *Game) playerTurn() bool {
 		removeCard := 0
 
 		time.Sleep(1 * time.Second)
+		fmt.Print("\n\n")
 
 		// check opponent cards, if match, give to player, remove from opponent, return true
 		for i := 0; i < len(game.opponentCards); i++ {
@@ -199,9 +194,9 @@ func (game *Game) playerTurn() bool {
 
 			if bait == fish {
 				// add to card to player hand
-				fmt.Printf("You caught a fish! \n")
 				game.playerCards = append(game.playerCards, game.opponentCards[i])
 				lastCard := game.playerCards[len(game.playerCards)-1].getString()
+				fmt.Printf("You caught a fish! \n")
 				fmt.Printf("You picked a %v. \n", lastCard)
 
 				fmt.Printf("\n")
@@ -229,10 +224,10 @@ func (game *Game) playerTurn() bool {
 			}
 		}
 
-		fmt.Printf("Go fish! \n")
 		card := game.deck.deal(1)[0]
 		game.playerCards = append(game.playerCards, card)
 		lastCard := game.playerCards[len(game.playerCards)-1].getString()
+		fmt.Printf("Go fish! ")
 		fmt.Printf("You picked a %v. \n", lastCard)
 
 		fmt.Printf("\n")
@@ -241,7 +236,7 @@ func (game *Game) playerTurn() bool {
 
 		fmt.Printf("\n")
 		fmt.Printf("Opponents turn!\n")
-		fmt.Printf("---------------\n\n")
+		fmt.Printf("-----------------------\n\n")
 
 		game.opponentTurn()
 	}
@@ -252,17 +247,10 @@ func (game *Game) opponentTurn() bool {
 	time.Sleep(1 * time.Second)
 	game.checkForBook(game.opponentCards, false)
 
-	fmt.Print("Opponent cards: ")
-	displayCards(game.opponentCards)
-	fmt.Print("Opponent books: ")
-	displayCards(game.opponentBooks)
-	fmt.Print("\n")
-
-	// temporarily, will add logic to make better asks
-	// ask := game.opponentCards[0]
+	// temporary random selection
 	request := game.chooseCard()[0].value
-	fmt.Print("opponent asks for ", request, "\n")
-	// fmt.Print("opponent asks for ", ask.value, "\n")
+	fmt.Print("opponent asks for ", request, "\n\n")
+	time.Sleep(1 * time.Second)
 	hasCard := true
 
 	removeCard := 0
@@ -294,20 +282,12 @@ func (game *Game) opponentTurn() bool {
 
 	if hasCard == false {
 		fmt.Printf("You do not have that card. Go fish!\n")
+		fmt.Print("Opponent draws a card. \n\n")
 		card := game.deck.deal(1)[0]
-		fmt.Printf("check this: \n")
-		fmt.Print(card, game.opponentCards)
 		game.opponentCards = append(game.opponentCards, card)
-		lastCard := game.opponentCards[len(game.opponentCards)-1].getString()
-		fmt.Printf("Opponent picks %v \n\n", lastCard)
 
 		time.Sleep(1 * time.Second)
-		fmt.Printf("You now have \n")
-		displayCards(game.playerCards)
-		fmt.Printf("and opponent has \n")
-		displayCards(game.opponentCards)
-		fmt.Printf("-----------------\n\n")
-		fmt.Printf("Your turn! \n\n")
+		fmt.Printf("--------------------------\n\n")
 	}
 
 	if len(game.playerCards)+len(game.opponentCards) != 52 {
@@ -319,11 +299,6 @@ func (game *Game) opponentTurn() bool {
 	} else {
 		return false
 	}
-	return false
-}
-
-// check if player has book, remove book from hand, add to books
-func hasBook(cards []Card) bool {
 	return false
 }
 
